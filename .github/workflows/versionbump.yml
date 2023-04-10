@@ -1,0 +1,29 @@
+name: Bump version
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  releaseJob:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch to calculate changelog
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Bump Version and push tag
+        id: tag_version
+        uses: anothrNick/github-tag-action@v1
+        env: 
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           WITH_V: true
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag_version.outputs.new_tag }}" --generate-notes
