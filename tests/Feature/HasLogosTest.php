@@ -3,11 +3,10 @@
 use App\Services\BitlyService;
 use Illuminate\Support\Facades\Storage;
 
-it('has senior crest', function () {
-    Storage::assertExists('senior-crest.png');
-});
-it('has prep crest', function () {
-    Storage::assertExists('prep-crest.png');
+it('has all logos', function () {
+    foreach (\App\Enums\LogoImage::cases() as $logo) {
+        Storage::disk('logos')->assertExists($logo->value);
+    }
 });
 it('has_bitly_connection', function () {
     $service = new BitlyService();
